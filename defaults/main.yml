@@ -1,0 +1,5 @@
+---
+nodenv_packages_user: "{{ nodenv_user | default(user) | default(omit) }}"
+nodenv_packages_user_home: "{{ host_user_homes }}/{{ nodenv_packages_user }}"
+nodenv_packages_shims: "{{ nodenv_packages_user_home }}/.nodenv/shims"
+nodenv_packages_node_version: "{{ nodenv_node_version | default(omit) }}"
