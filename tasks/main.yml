@@ -1,4 +1,5 @@
 ---
+
 - name: Install package with nodenv
   command: npm install -g {{ item.name }} creates={{ nodenv_packages_shims }}/{{ item.bin | default(item.name) }}
   become: true
@@ -7,3 +8,13 @@
     RBENV_VERSION: "{{ nodenv_packages_node_version }}"
     PATH: "{{ nodenv_packages_shims }}:{{ ansible_env.PATH }}"
   with_items: "{{ nodenv_packages }}"
+  register: nodenv_install_result
+
+- name: Rehash nodenv packages
+  command: "{{ nodenv_bin }} rehash"
+  environment:
+    PATH: "{{ nodenv_root }}:{{ ansible_env.PATH }}"
+  become: true
+  become_user: "{{ nodenv_homebrew_user }}"
+  changed_when: true
+  when: nodenv_install_result is changed
