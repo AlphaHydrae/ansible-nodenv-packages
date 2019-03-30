@@ -1,11 +1,13 @@
 ---
 
 - name: Install package with nodenv
-  command: npm install -g {{ item.name }} creates={{ nodenv_packages_shims }}/{{ item.bin | default(item.name) }}
+  command: npm install -g {{ item.name }}
+  args:
+    creates: "{{ nodenv_packages_shims }}/{{ item.bin | default(item.name) }}"
   become: true
   become_user: "{{ nodenv_packages_user }}"
   environment:
-    RBENV_VERSION: "{{ nodenv_packages_node_version }}"
+    NODENV_VERSION: "{{ nodenv_packages_node_version }}"
     PATH: "{{ nodenv_packages_shims }}:{{ ansible_env.PATH }}"
   with_items: "{{ nodenv_packages }}"
   register: nodenv_install_result
